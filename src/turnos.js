@@ -8,12 +8,16 @@ function reiniciar() {
   siguienteId = 1;
 }
  
+function activos() {
+  return turnos.filter((t) => t.estado === 'activo');
+}
+ 
 function listar() {
-  return turnos.slice();
+  return activos();
 }
  
 function horariosLibres() {
-  return HORARIOS.filter((h) => !turnos.some((t) => t.hora === h));
+  return HORARIOS.filter((h) => !activos().some((t) => t.hora === h));
 }
  
 function reservar(nombre, hora) {
@@ -23,12 +27,23 @@ function reservar(nombre, hora) {
   if (!HORARIOS.includes(hora)) {
     return { ok: false, error: 'Horario no válido' };
   }
-  if (turnos.some((t) => t.hora === hora)) {
+  if (activos().some((t) => t.hora === hora)) {
     return { ok: false, error: 'El horario ya está reservado' };
   }
-  const turno = { id: siguienteId++, nombre: nombre.trim(), hora, codigo: 'T-' + hora.replace(':', '') };
+
+const turno = { id: siguienteId++, nombre: nombre.trim(), hora, estado: 'activo', codigo: 'T-' + hora.replace(':', '') };
+
   turnos.push(turno);
   return { ok: true, turno };
 }
  
-module.exports = { HORARIOS, reiniciar, listar, horariosLibres, reservar };
+function cancelar(id) {
+  const turno = activos().find((t) => t.id === id);
+  if (!turno) {
+    return { ok: false, error: 'El turno no existe o ya fue cancelado' };
+  }
+  turno.estado = 'cancelado';
+  return { ok: true, turno };
+}
+ 
+module.exports = { HORARIOS, reiniciar, listar, horariosLibres, reservar, cancelar };
