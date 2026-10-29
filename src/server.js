@@ -2,19 +2,19 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const turnos = require('./turnos');
- 
+
 const PUBLICO = path.join(__dirname, '..', 'public');
 const PUERTO = process.env.PORT || 3000;
 const ESTATICOS = {
   '/': ['index.html', 'text/html; charset=utf-8'],
   '/app.js': ['app.js', 'text/javascript; charset=utf-8'],
 };
- 
+
 function responderJson(res, estado, datos) {
   res.writeHead(estado, { 'Content-Type': 'application/json; charset=utf-8' });
   res.end(JSON.stringify(datos));
 }
- 
+
 function leerCuerpo(req) {
   return new Promise((resolve) => {
     let texto = '';
@@ -28,7 +28,7 @@ function leerCuerpo(req) {
     });
   });
 }
- 
+
 const servidor = http.createServer(async (req, res) => {
   if (req.method === 'GET' && ESTATICOS[req.url]) {
     const [archivo, tipo] = ESTATICOS[req.url];
@@ -43,7 +43,14 @@ const servidor = http.createServer(async (req, res) => {
     const resultado = turnos.reservar(nombre, hora);
     return responderJson(res, resultado.ok ? 201 : 400, resultado);
   }
+
+  const coincidencia = req.method === 'DELETE' && req.url.match(/^\/api\/turnos\/(\d+)$/);
+  if (coincidencia) {
+    const resultado = turnos.cancelar(Number(coincidencia[1]));
+    return responderJson(res, resultado.ok ? 200 : 404, resultado);
+  }
+
   responderJson(res, 404, { ok: false, error: 'No encontrado' });
 });
- 
+
 servidor.listen(PUERTO, () => console.log(`Turnos en línea: http://localhost:${PUERTO}`));
