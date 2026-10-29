@@ -1,0 +1,25 @@
+{
+  "name": "turnos-en-linea",
+  "version": "1.0.0",
+  "description": "Sistema de turno",
+  "main": "index.js",
+  "scripts": {
+    "test": "cucumber-js",
+    "start": "node src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jlrodriguez0906/turnos-en-linea.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jlrodriguez0906/turnos-en-linea/issues"
+  },
+  "homepage": "https://github.com/jlrodriguez0906/turnos-en-linea#readme",
+  "devDependencies": {
+    "@cucumber/cucumber": "^13.3.0"
+  }
+}
