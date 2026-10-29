@@ -26,7 +26,7 @@ function reservar(nombre, hora) {
   if (turnos.some((t) => t.hora === hora)) {
     return { ok: false, error: 'El horario ya está reservado' };
   }
-  const turno = { id: siguienteId++, nombre: nombre.trim(), hora };
+  const turno = { id: siguienteId++, nombre: nombre.trim(), hora, codigo: 'T-' + hora.replace(':', '') };
   turnos.push(turno);
   return { ok: true, turno };
 }
