@@ -34,7 +34,10 @@ formulario.addEventListener('submit', async (evento) => {
     body: JSON.stringify({ nombre: document.getElementById('nombre').value, hora: selector.value }),
   });
   const datos = await respuesta.json();
-  mensaje.textContent = datos.ok ? `Turno confirmado para las ${datos.turno.hora}` : datos.error;
+  mensaje.textContent = datos.ok
+    ? `Turno confirmado para las ${datos.turno.hora}. Código: ${datos.turno.codigo}`
+    : datos.error;
+
   cargar();
 });
 
